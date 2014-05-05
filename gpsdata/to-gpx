@@ -1,0 +1,34 @@
+#!/usr/bin/perl
+
+print "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n";
+print "<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" creator=\"\" version=\"1.1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">\n";
+
+while (<>) {
+	chomp;
+
+	($id, $time, $lat, $lon) = split(/\t/);
+
+	if ($id ne $oid) {
+		if ($within) {
+			print "    </trkseg>\n";
+			print "  </trk>\n";
+		}
+
+		print "  <trk>\n";
+		print "    <name>$id</name>\n";
+		print "    <trkseg>\n";
+
+		$oid = $id;
+		$within = 1;
+	}
+
+	print "      <trkpt lat=\"$lat\" lon=\"$lon\">\n";
+	print "        <time>$time</time>\n";
+	print "      </trkpt>\n";
+}
+
+if ($within) {
+	print "    </trkseg>\n";
+	print "  </trk>\n";
+	print "</gpx>\n";
+}
