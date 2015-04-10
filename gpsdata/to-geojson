@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+
+print "{ \"type\": \"FeatureCollection\", \"features\": [\n";
+
+while (<>) {
+	chomp;
+
+	($id, $time, $lat, $lon) = split(/\t/);
+
+	if ($id ne $oid) {
+		if ($within) {
+			print "] } },\n";
+		}
+
+		print "{ \"type\": \"Feature\", \"properties\": { \"id\": \"$id\" }, \"geometry\": { \"type\": \"LineString\", \"coordinates\": [";
+
+		$oid = $id;
+		$within = 1;
+
+		print " [ $lon, $lat ]";
+	} else {
+		print ", [ $lon, $lat ]";
+	}
+}
+
+if ($within) {
+	print "] } }\n";
+}
+
+print "] }\n";
